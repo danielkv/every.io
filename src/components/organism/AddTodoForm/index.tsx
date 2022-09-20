@@ -35,7 +35,7 @@ export const AddTodoForm: React.FC<TAddTodoForm> = ({ onClick }) => {
 
     return (
         <AddTodoFormContainer>
-            <Input value={text} onChange={onChange} />
+            <Input placeholder="Add Task" value={text} onChange={onChange} />
             <IconButton
                 onClick={handleClick}
                 type="plus"
