@@ -4,13 +4,22 @@ import { CardContainer, CardContent, CardTitle } from "./styles";
 
 export type TCardProps = {
     title?: string;
+    style?: React.CSSProperties;
+    className?: string;
 };
 
-export const Card: React.FC<TCardProps> = ({ title, children }) => {
+export const Card: React.FC<TCardProps> = ({
+    title,
+    children,
+    style,
+    className,
+}) => {
     return (
         <CardContainer>
             {!!title && <CardTitle>{title}</CardTitle>}
-            <CardContent>{children}</CardContent>
+            <CardContent style={style} className={className}>
+                {children}
+            </CardContent>
         </CardContainer>
     );
 };

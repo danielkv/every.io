@@ -1,13 +1,9 @@
 import React, { InputHTMLAttributes } from "react";
 
-import { InputContainer } from "./styles";
+import { InputField } from "./styles";
 
 export type TInputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export const Input: React.FC<TInputProps> = (props) => {
-    return (
-        <InputContainer>
-            <input {...props} />
-        </InputContainer>
-    );
+    return <InputField {...props} />;
 };

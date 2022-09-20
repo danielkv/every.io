@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, useState } from "react";
-import { IInputTodo, ITodo } from "../../../common/interfaces/todo";
+import { IInputTodo } from "../../../common/interfaces/todo";
 import { Input } from "../../atom/Input";
 import { IconButton } from "../../molecule/IconButton";
 
@@ -19,6 +19,11 @@ export const AddTodoForm: React.FC<TAddTodoForm> = ({ onClick }) => {
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
 
+        if (!text) {
+            alert("Description cannot be empty");
+            return;
+        }
+
         const newTodo: IInputTodo = {
             description: text,
         };
@@ -30,15 +35,13 @@ export const AddTodoForm: React.FC<TAddTodoForm> = ({ onClick }) => {
 
     return (
         <AddTodoFormContainer>
-            <form>
-                <Input value={text} onChange={onChange} />
-                <IconButton
-                    onClick={handleClick}
-                    type="plus"
-                    color="blue"
-                    iconColor="white"
-                />
-            </form>
+            <Input value={text} onChange={onChange} />
+            <IconButton
+                onClick={handleClick}
+                type="plus"
+                color="blue"
+                iconColor="white"
+            />
         </AddTodoFormContainer>
     );
 };
