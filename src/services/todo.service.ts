@@ -1,10 +1,11 @@
+import { IUpdateResponse } from "../common/interfaces/requests";
 import {
     IInputTodo,
     ITodo,
-    statusMapping,
     TStatus,
     TTodosByStatus,
 } from "../common/interfaces/todo";
+import { statusMapping } from "../common/utils/todo";
 
 export type TTodoFilter = {
     status: TStatus;
@@ -61,13 +62,17 @@ class TodoService {
         return todo;
     }
 
-    edit(id: string, newStatus: TStatus): ITodo {
+    edit(id: string, newStatus: TStatus): IUpdateResponse<ITodo> {
         const todoIndex = this.todos.findIndex((todo) => todo.id === id);
         if (todoIndex < 0) throw new Error("Todo not found");
 
+        const oldTodoSnapshot = { ...this.todos[todoIndex] };
         this.todos[todoIndex].status = newStatus;
 
-        return this.todos[todoIndex];
+        return {
+            old: oldTodoSnapshot,
+            new: this.todos[todoIndex],
+        };
     }
 }
 

@@ -9,6 +9,7 @@ export type IconButtonProps = {
     iconColor?: string;
     color?: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: boolean;
 };
 
 export const IconButton: React.VFC<IconButtonProps> = ({
@@ -16,9 +17,11 @@ export const IconButton: React.VFC<IconButtonProps> = ({
     iconColor,
     color,
     onClick,
+    disabled,
 }) => {
     return (
         <IconButtonContainer
+            disabled={disabled}
             onClick={onClick}
             style={{ backgroundColor: color }}
         >

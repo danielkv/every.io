@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import {
     IInputTodo,
-    statusMapping,
+    ITodo,
     TStatus,
     TTodosByStatus,
 } from "../../common/interfaces/todo";
+import { statusMapping } from "../../common/utils/todo";
+import { Card } from "../../components/molecule/Card";
 import { AddTodoForm } from "../../components/organism/AddTodoForm";
-import { TodosColumn } from "../../components/template/TodosColumn";
+import { TodoItem } from "../../components/organism/TodoItem";
+
 import todoService from "../../services/todo.service";
 
 import { TodosContainer, TodosContent, TodosFooter, NoResult } from "./styles";
@@ -39,6 +42,36 @@ export const Todos: React.FC = () => {
             console.error((err as Error).message);
         }
     }
+    function handleEditTodo(updated: ITodo) {
+        try {
+            if (!todosByStatus) return;
+
+            const updatedTodoResponse = todoService.edit(
+                updated.id,
+                updated.status
+            );
+            const { new: updatedTodo, old } = updatedTodoResponse;
+
+            const updatedTodoStatus = updatedTodo.status;
+            const currentTodos = todosByStatus[updatedTodoStatus];
+
+            const oldTodoStatus = old.status;
+            const oldTodos = todosByStatus[oldTodoStatus];
+            const oldTodoIndex = oldTodos.findIndex(
+                (todo) => todo.id === old.id
+            );
+
+            oldTodos.splice(oldTodoIndex, 1);
+
+            setTodosByStatus({
+                ...todosByStatus,
+                [updatedTodoStatus]: [...currentTodos, updatedTodo],
+                [oldTodoStatus]: [...oldTodos],
+            });
+        } catch (err) {
+            console.error((err as Error).message);
+        }
+    }
 
     if (!todosByStatus) return <NoResult>No To Dos to show</NoResult>;
 
@@ -49,7 +82,13 @@ export const Todos: React.FC = () => {
                     const status = _status as TStatus;
                     const label = statusMapping[status];
 
-                    return <TodosColumn title={label} todos={todos} />;
+                    return (
+                        <Card title={label}>
+                            {todos.map((todo) => (
+                                <TodoItem onEdit={handleEditTodo} todo={todo} />
+                            ))}
+                        </Card>
+                    );
                 })}
             </TodosContent>
             <TodosFooter>
