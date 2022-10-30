@@ -11,3 +11,9 @@ export interface IInputTodo {
 }
 
 export type TTodosByStatus = Record<TStatus, ITodo[]>;
+
+// {
+// 	todo: [todo1, todo2],
+// 	progress: [todo3, todo4],
+// 	done: [todo5, todo6],
+// }

@@ -10,8 +10,10 @@ import { statusMapping } from "../../common/utils/todo";
 import { Card } from "../../components/molecule/Card";
 import { AddTodoForm } from "../../components/organism/AddTodoForm";
 import { TodoItem } from "../../components/organism/TodoItem";
+import issueService from "../../services/issue.service";
 
 import todoService from "../../services/todo.service";
+import { issueToTodo } from "../../useCases/issueToTodo";
 
 import { TodosContainer, TodosContent, TodosFooter, NoResult } from "./styles";
 
@@ -21,9 +23,16 @@ export const Todos: React.FC = () => {
     );
 
     useEffect(() => {
-        const todosByStatus = todoService.getAll();
+        async function load() {
+            const issues = await issueService.get();
+            todoService.set(issueToTodo(issues));
+        }
 
-        setTodosByStatus(todosByStatus);
+        load().then(() => {
+            const todosByStatus = todoService.getAll();
+
+            setTodosByStatus(todosByStatus);
+        });
     }, []);
 
     function handleAddTodo(todo: IInputTodo) {
@@ -42,6 +51,7 @@ export const Todos: React.FC = () => {
             console.error((err as Error).message);
         }
     }
+
     function handleEditTodo(updated: ITodo) {
         try {
             if (!todosByStatus) return;
@@ -83,9 +93,13 @@ export const Todos: React.FC = () => {
                     const label = statusMapping[status];
 
                     return (
-                        <Card title={label}>
+                        <Card key={status} title={label}>
                             {todos.map((todo) => (
-                                <TodoItem onEdit={handleEditTodo} todo={todo} />
+                                <TodoItem
+                                    key={todo.id}
+                                    onEdit={handleEditTodo}
+                                    todo={todo}
+                                />
                             ))}
                         </Card>
                     );

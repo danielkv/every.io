@@ -74,6 +74,10 @@ class TodoService {
             new: this.todos[todoIndex],
         };
     }
+
+    set(_todos: ITodo[]) {
+        this.todos = _todos;
+    }
 }
 
 export default new TodoService();
